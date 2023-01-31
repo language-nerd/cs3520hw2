@@ -7,12 +7,43 @@ namespace {
 
 // Implement the functions declared in processing.hpp here.
 Image rotate_left(const Image& img) {
+  // Make a new image with inverted dimensions
+  Image rotated_image = Image(img.get_height(), img.get_width());
 
+  // Iterate through the image 
+  for (int i = 0; i < img.get_width(); ++i){
+    for (int j = 0; j < img.get_height(); ++j){
+      Pixel scraped_pixel = img.get_pixel(i, j);
+      rotated_image.set_pixel(j, img.get_width()-1-i, scraped_pixel);
+    }
+  }
+
+  return rotated_image;
 }
 Image rotate_right(const Image& img) {
+  // Make a new image with inverted dimensions
+  Image rotated_image = Image(img.get_height(), img.get_width());
 
+  // Iterate through the image 
+  for (int i = 0; i < img.get_width(); ++i){
+    for (int j = 0; j < img.get_height(); ++j){
+      Pixel scraped_pixel = img.get_pixel(i, j);
+      rotated_image.set_pixel(img.get_height()-1-j, i, scraped_pixel);
+    }
+  }
+  
+  return rotated_image;
 }
 Matrix compute_energy_matrix(const Image& img) {
+  Matrix energy = Matrix(img.get_width(), img.get_height());
+
+  for (int i = 0; i < img.get_width(); ++i){
+    for (int j = 0; j < img.get_height(); ++j){
+      int pixel_energy = 0;
+      //int pixel_energy = squared_difference(p1, Pixel p2) + squared_difference(Pixel p1, Pixel p2);
+      energy.at(i, j) = pixel_energy;
+    }
+  }
 
 }
 Matrix compute_vertical_cost_matrix(const Image& img) {
