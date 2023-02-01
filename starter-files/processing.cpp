@@ -55,6 +55,8 @@ Matrix compute_energy_matrix(const Image& img) {
       }
     }
   }
+
+  return energy_matrix;
 }
 
 Matrix compute_vertical_cost_matrix(const Image& img) {
@@ -79,9 +81,39 @@ Matrix compute_vertical_cost_matrix(const Image& img) {
       }
     }
   }
-  
+
+  return cost_matrix;
 }
 std::vector<int> find_minimal_vertical_seam(const Matrix& cost) {
+  vector<int> seam(cost.get_height());
+
+  int minimum_cost_pixel = 0; // default to leftmost pixel
+  int minimum_cost = cost.at(minimum_cost_pixel, cost.get_height()-1); // default to the cost of the bottom left pixel
+
+  for (int i = 0; i < cost.get_width(); ++i){
+    if (cost.at(i, cost.get_height()-1) < minimum_cost){ // if cost is less than the minimum_cost defined by the leftmost pixel
+      minimum_cost_pixel = i; // save the pixel x coordinate
+      minimum_cost = cost.at(i, cost.get_height()-1); // save the minimum cost to check against others in the row
+    }
+  }
+
+  for (int j = cost.get_width()-1; j >= 0; --j){
+    if(j = cost.get_width()-1){ // if bottom row
+      seam.at(cost.get_height()-1) = minimum_cost_pixel; // set the seam value to the current minimum cost pixel
+    }
+    else {
+      if (minimum_cost_pixel == 0) { // if touching left edge
+        
+        seam.at(j) = minimum_cost_pixel;
+      }
+      else if (minimum_cost_pixel == cost.get_width()-1) { // if touching right edge
+        seam.at(j) = minimum_cost_pixel;
+      }
+      else {
+        seam.at(j) = minimum_cost_pixel;
+      }
+    }
+  }
 
 }
 
