@@ -38,6 +38,57 @@ TEST(test_print_basic) {
 
 // ADD YOUR TESTS HERE
 // You are encouraged to use any functions from Image_test_helpers.h as needed.
+TEST(test_reading_img) {
+  string input = "P3 2 2\t255 255 0 0\n0\n255 0 \n0 0 255 255 255 255 \n";
+  std::istringstream ss_input(input);
+  Image img = Image::read_ppm(ss_input);
+  ASSERT_EQUAL(img.get_width(), 2);
+  ASSERT_EQUAL(img.get_height(), 2);
+
+  Pixel p1 = {255, 0, 0};
+  ASSERT_TRUE(Pixel_equal(img.get_pixel(0, 0), p1));
+  Pixel p2 = {0, 255, 0};
+  ASSERT_TRUE(Pixel_equal(img.get_pixel(0, 1), p2));
+  Pixel p3 = {0, 0, 255};
+  ASSERT_TRUE(Pixel_equal(img.get_pixel(1, 0), p3));
+  Pixel p4 = {255, 255, 255};
+  ASSERT_TRUE(Pixel_equal(img.get_pixel(1, 1), p4));
+
+}
+
+// tests for testing constructors
+TEST(test_create_empty_img) {
+  Image img = Image();
+  ASSERT_EQUAL(img.get_width(), 0);
+  ASSERT_EQUAL(img.get_height(), 0);
+}
+
+TEST(test_create_img_with_zero_pixel_values) {
+  Image img = Image(4, 3);
+  ASSERT_EQUAL(img.get_width(), 4);
+  ASSERT_EQUAL(img.get_height(), 3);
+  Pixel p = {0, 0, 0};
+
+  for(int h = 0; h < img.get_height(); ++h) {
+    for(int w = 0; w < img.get_width(); ++w) {
+      ASSERT_TRUE(Pixel_equal(img.get_pixel(h,w), p));
+    }
+  }
+}
+
+TEST(test_create_img_with_given_pixel_value) {
+  const Pixel p = {255, 255, 255};
+  Image img = Image(5, 3, p);
+  ASSERT_EQUAL(img.get_width(), 5);
+  ASSERT_EQUAL(img.get_height(), 3);
+ 
+
+  for(int h = 0; h < img.get_height(); ++h) {
+    for(int w = 0; w < img.get_width(); ++w) {
+      ASSERT_TRUE(Pixel_equal(img.get_pixel(h,w), p));
+    }
+  }
+}
 
 // This is some macro magic that adds a main() function that runs the test cases
 // defined in this file. Do not add your own main() function.

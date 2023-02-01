@@ -1,5 +1,9 @@
 #include <iostream>
 #include "Matrix.hpp"
+#include "assert.h"
+
+using std::cout;
+using std::endl;
 
 // using namespace std; // Are we supposed to have this here?
 //hello we were just working on this -salute-
@@ -30,14 +34,17 @@ int Matrix::get_height() const {
 }
 
 int& Matrix::at(int row, int column) {
+    assert(row >= 0 && row < m_height && column >= 0 && column < m_width);
     return m_data.at(column + m_width * row); 
 }
 
 const int& Matrix::at(int row, int column) const {
+    assert(row >= 0 && row < m_height && column >= 0 && column < m_width);
     return m_data.at(column + m_width * row); 
 }
 
 Matrix::Slice Matrix::get_row_slice(int row, int col_start, int col_end) const{
+    assert(row >= 0 && row < m_height);
     std::vector<int> portion;
     // If col_start is less than zero, the first element of the returned slice
     // will be the first element of the row.

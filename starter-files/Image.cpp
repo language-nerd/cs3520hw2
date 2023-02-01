@@ -1,53 +1,36 @@
 #include <iostream>
 #include <string>
 #include "Image.hpp"
+#include "assert.h"
 
 using std::cout;
 using std::string;
 using std::endl;
 
+
   Image::Image(): m_width(0), m_height(0) {}
 
-  Image::Image(int width, int height): m_width(width), m_height(height){
-    for(int h = 0; h < height; ++h) {
-        for(int w = 0; w < width; ++w) {
-            m_red_channel.at(h, w) = 0;
-            m_green_channel.at(h, w) = 0;
-            m_blue_channel.at(h, w) = 0;
-        }
-    }
-  }
+  Image::Image(int width, int height): m_width(width), m_height(height), 
+  m_red_channel(width, height), m_green_channel(width, height), m_blue_channel(width, height){}
 
-  Image::Image(int width, int height, const Pixel& fill): m_width(width), m_height(height) {
-    for(int h = 0; h < height; ++h) { // height relates to the rows (y values)
-        for(int w = 0; w < width; ++w) { // width relates to the columns (x values)
-            m_red_channel.at(h, w) = fill.r;
-            m_green_channel.at(h, w) = fill.g;
-            m_blue_channel.at(h, w) = fill.b;
-        }
-    }
-  }
+  Image::Image(int width, int height, const Pixel& fill): m_width(width), m_height(height),
+    m_red_channel(width, height, fill.r), m_green_channel(width, height, fill.g), m_blue_channel(width, height, fill.b) {}
 
 Image Image::read_ppm(std::istream& is) {
     // have an idea of how to do this but not sure how to skip some parts in the ppm file
     string token;
     is >> token;
-    if(token.compare("P3")) {
-        cout << "This is a valid ppm file!" << "\n";
-    }
-    
 
     int width; // relates to columns
     is >> width;
+
     int height; // relates to rows
     is >> height;
 
-    //getline(is, width);
-    //getline(is, height);
 
     int intensity;
     is >> intensity; // intensity has a value of 255
-    
+
     int red;
     int green;
     int blue;
@@ -58,9 +41,13 @@ Image Image::read_ppm(std::istream& is) {
     Image img = Image(width, height);
     while(is >> red && is >> green && is >> blue) {
         img.set_pixel(row, col, Pixel{red, green, blue});
-        ++col;
+        if(col < width) {
+            ++col;
+        }
         if(col == width) {
-            ++row;
+            if(row < height) {
+                ++row;
+            }
             col = 0;
         } 
     }
@@ -88,10 +75,12 @@ int Image::get_height() const {
 }
 
 Pixel Image::get_pixel(int row, int column) const {
+    assert(row >= 0 && row < m_height && column >= 0 && column < m_width);
     return Pixel{m_red_channel.at(row, column), m_green_channel.at(row, column), m_blue_channel.at(row, column)};
 }
 
 void Image::set_pixel(int row, int column, const Pixel& color) {
+    assert(row >= 0 && row < m_height && column >= 0 && column < m_width);
     m_red_channel.at(row, column) = color.r;
     m_green_channel.at(row, column) = color.g;
     m_blue_channel.at(row, column) = color.b;

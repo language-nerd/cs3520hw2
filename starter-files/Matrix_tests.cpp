@@ -1,6 +1,9 @@
 #include "Matrix.hpp"
 #include "Matrix_test_helpers.h"
 #include "unit_test_framework.h"
+#include "iostream"
+
+using std::ostringstream;
 
 // Here's a free test for you! Model yours after this one.
 // Add a comment like the one here to say what it is testing.
@@ -158,6 +161,24 @@ TEST(test_Matrix_row_slice_col_end_greater_than_width) {
   ASSERT_EQUAL(portion.at(3), 10);
   ASSERT_EQUAL(portion.at(4), 0);
   ASSERT_EQUAL(portion.size(), 5);
+}
+
+TEST(test_Matrix_print) {
+  int width = 3;
+  int height = 2;
+  int fill_val = 5;
+  auto mat = Matrix(width, height, fill_val);
+
+    // Capture our output
+  ostringstream actual;
+  mat.print(actual);
+
+  // Correct output
+  ostringstream correct;
+  correct << "3 2\n";
+  correct << "5 5 5 \n";
+  correct << "5 5 5 \n";
+  ASSERT_EQUAL(correct.str(), actual.str());
 }
 
 // This is some macro magic that adds a main() function that runs the test cases
