@@ -156,13 +156,16 @@ Image seam_carve_width(const Image& img, int new_width) {
 
 Image seam_carve_height(const Image& img, int new_height) {
   Image finished_image = rotate_left(img);
-  finished_image = seam_carve_width(finished_image);
+  finished_image = seam_carve_width(finished_image, new_height);
   finished_image = rotate_right(finished_image);
   return finished_image;
 }
 
 Image seam_carve(const Image& img, int newWidth, int newHeight) {
-
+  Image finished_image = img;
+  finished_image = seam_carve_width(img, newWidth);
+  finished_image = seam_carve_height(finished_image, newHeight);
+  return finished_image;
 }
 
 namespace {
