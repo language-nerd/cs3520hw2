@@ -1,4 +1,6 @@
 #include "processing.hpp"
+// Used late day
+//#include <iostream>
 
 namespace {
   // The implementation of squared_difference is provided for you.
@@ -62,6 +64,8 @@ Matrix compute_energy_matrix(const Image& img) {
 Matrix compute_vertical_cost_matrix(const Image& img) {
   Matrix cost_matrix = compute_energy_matrix(img);
 
+  //std::cout << "started function" << "\n";
+
   for (int j = 1; j < cost_matrix.get_height(); ++j){
     for (int i = 0; i < cost_matrix.get_width(); ++i){
       if (i == 0) { // if left edge
@@ -81,6 +85,8 @@ Matrix compute_vertical_cost_matrix(const Image& img) {
       }
     }
   }
+
+  //std::cout << "ended function" << "\n";
 
   return cost_matrix;
 }
