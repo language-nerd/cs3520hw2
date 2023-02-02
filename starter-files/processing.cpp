@@ -50,7 +50,7 @@ Matrix compute_energy_matrix(const Image& img) {
 
   for (int i = 0; i < img.get_width(); ++i){
     for (int j = 0; j < img.get_height(); ++j){
-      if (i == 0 || j == 0 || i == img.get_width-1 || j == img.get_height-1){
+      if (i == 0 || j == 0 || i == img.get_width()-1 || j == img.get_height()-1){
         energy_matrix.at(i, j) = maximum_energy;
       }
     }
@@ -66,17 +66,17 @@ Matrix compute_vertical_cost_matrix(const Image& img) {
     for (int i = 0; i < cost_matrix.get_width(); ++i){
       if (i == 0) { // if left edge
         int cost = cost_matrix.at(i, j); // start by initializing cost to the energy of the current pixel
-        cost += min(cost_matrix.at(i, j-1), cost_matrix.at(i+1, j-1)); // add the min of the energy of the top and right
+        cost += std::min(cost_matrix.at(i, j-1), cost_matrix.at(i+1, j-1)); // add the min of the energy of the top and right
         cost_matrix.at(i,j) = cost; // set the computed cost
       }
       else if (i == cost_matrix.get_width()-1) { // if right edge
         int cost = cost_matrix.at(i, j); // start by initializing cost to the energy of the current pixel
-        cost += min(cost_matrix.at(i, j-1), cost_matrix.at(i-1, j-1)); // add the min of the energy of the top and left
+        cost += std::min(cost_matrix.at(i, j-1), cost_matrix.at(i-1, j-1)); // add the min of the energy of the top and left
         cost_matrix.at(i,j) = cost; // set the computed cost
       }
       else {
         int cost = cost_matrix.at(i, j); // start by initializing cost to the energy of the current pixel
-        cost += min(cost_matrix.at(cost_matrix.at(i-1, j-1), i, j-1), cost_matrix.at(i+1, j-1)); // add the min of the energy of the top, left, and right
+        cost += std::min(std::min(cost_matrix.at(i-1, j-1), cost_matrix.at(i, j-1)), cost_matrix.at(i+1, j-1)); // add the min of the energy of the top, left, and right
         cost_matrix.at(i,j) = cost; // set the computed cost
       }
     }
@@ -85,7 +85,7 @@ Matrix compute_vertical_cost_matrix(const Image& img) {
   return cost_matrix;
 }
 std::vector<int> find_minimal_vertical_seam(const Matrix& cost) {
-  vector<int> seam(cost.get_height());
+  std::vector<int> seam(cost.get_height());
 
   int minimum_cost_pixel = 0; // default to leftmost pixel
   int minimum_cost = cost.at(minimum_cost_pixel, cost.get_height()-1); // default to the cost of the bottom left pixel
@@ -135,12 +135,12 @@ Image remove_vertical_seam(const Image& img, const std::vector<int>& seam) {
   Image trimmed_image = Image(img.get_width()-1, img.get_height());
 
   for (int k = 0; k < seam.size(); ++k){ // for each in seam (represents a row)
-    for (int l = 0; l < seam.at(k)){
+    for (int l = 0; l < seam.at(k); ++l){
       trimmed_image.set_pixel(l, k, img.get_pixel(l, k));
     }
     if (seam.at(k) < img.get_width()-1){
       for (int m = seam.at(k)+1; m < img.get_width(); ++k){
-        trimmed_image.set_pixel(l + seam.at(k), k, img.get_pixel(l, k));
+        trimmed_image.set_pixel(m + seam.at(k), k, img.get_pixel(m, k));
       }
     }
   }
@@ -148,7 +148,7 @@ Image remove_vertical_seam(const Image& img, const std::vector<int>& seam) {
 
 Image seam_carve_width(const Image& img, int new_width) {
   Image finished_image;
-  while(img.get_width > new_width){
+  while(img.get_width() > new_width){
     finished_image = remove_vertical_seam(img, find_minimal_vertical_seam(compute_vertical_cost_matrix(img)));
   }
   return finished_image;
