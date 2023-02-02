@@ -6,7 +6,6 @@ using std::cout;
 using std::endl;
 
 // using namespace std; // Are we supposed to have this here?
-//hello we were just working on this -salute-
 
 
 Matrix::Matrix(): m_width(0), m_height(0) {}
