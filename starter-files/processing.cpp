@@ -132,19 +132,33 @@ std::vector<int> find_minimal_vertical_seam(const Matrix& cost) {
 }
 
 Image remove_vertical_seam(const Image& img, const std::vector<int>& seam) {
-  Image trimmed_image = img;
+  Image trimmed_image = Image(img.get_width()-1, img.get_height());
 
-  for (int j = 0; j < img.get_height(); j++){
-    for (int )
+  for (int k = 0; k < seam.size(); ++k){ // for each in seam (represents a row)
+    for (int l = 0; l < seam.at(k)){
+      trimmed_image.set_pixel(l, k, img.get_pixel(l, k));
+    }
+    if (seam.at(k) < img.get_width()-1){
+      for (int m = seam.at(k)+1; m < img.get_width(); ++k){
+        trimmed_image.set_pixel(l + seam.at(k), k, img.get_pixel(l, k));
+      }
+    }
   }
 }
 
 Image seam_carve_width(const Image& img, int new_width) {
-
+  Image finished_image;
+  while(img.get_width > new_width){
+    finished_image = remove_vertical_seam(img, find_minimal_vertical_seam(compute_vertical_cost_matrix(img)));
+  }
+  return finished_image;
 }
 
 Image seam_carve_height(const Image& img, int new_height) {
-
+  Image finished_image = rotate_left(img);
+  finished_image = seam_carve_width(finished_image);
+  finished_image = rotate_right(finished_image);
+  return finished_image;
 }
 
 Image seam_carve(const Image& img, int newWidth, int newHeight) {
