@@ -101,24 +101,42 @@ std::vector<int> find_minimal_vertical_seam(const Matrix& cost) {
     if(j = cost.get_width()-1){ // if bottom row
       seam.at(cost.get_height()-1) = minimum_cost_pixel; // set the seam value to the current minimum cost pixel
     }
-    else {
-      if (minimum_cost_pixel == 0) { // if touching left edge
-        
-        seam.at(j) = minimum_cost_pixel;
+    else { // if any row above the bottom row, check itself and neighbors for lowest
+      int left_pixel = minimum_cost_pixel - 1;
+      int right_pixel = minimum_cost_pixel + 1;
+
+      int lowest_cost = cost.at(minimum_cost_pixel, j);
+      int current_lowest = 0; // -1 is left, 0 is current, 1 is right
+
+      if (left_pixel >= 0){ // if left bound is valid
+        int left_cost = cost.at(minimum_cost_pixel-1, j);
+        if (left_cost <= lowest_cost) {
+          lowest_cost = left_cost;
+          current_lowest = -1;
+        }
       }
-      else if (minimum_cost_pixel == cost.get_width()-1) { // if touching right edge
-        seam.at(j) = minimum_cost_pixel;
+      if (right_pixel <= cost.get_width()-1){ // if right bound is valid
+        int right_cost = cost.at(minimum_cost_pixel+1, j);
+        if (right_cost < lowest_cost) {
+          lowest_cost = right_cost;
+          current_lowest = 1;
+        }
       }
-      else {
-        seam.at(j) = minimum_cost_pixel;
-      }
+
+      minimum_cost_pixel += current_lowest;
+      seam.at(cost.get_height()-1) = minimum_cost_pixel; // set the seam value to the current minimum cost pixel
     }
   }
 
+  return seam;
 }
 
 Image remove_vertical_seam(const Image& img, const std::vector<int>& seam) {
+  Image trimmed_image = img;
 
+  for (int j = 0; j < img.get_height(); j++){
+    for (int )
+  }
 }
 
 Image seam_carve_width(const Image& img, int new_width) {
