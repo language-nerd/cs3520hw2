@@ -55,9 +55,9 @@ int main(int argc, char* argv[]) {
     int width = stoi(width_str);
     // checking for illegal width
         if(width < 0 || width > img.get_width()) {
-                  cout << "Usage: resize.exe " << input_file << " " << output_file << " " << width_str << "\n"
-            << "WIDTH and HEIGHT must be less than or equal to original" << endl;
-            return 2; // returning 2 means there was an error in the program
+         cout << "Usage: resize.exe " << input_file << " " << output_file << " " << width_str << "[" << img.get_height() << "]\n"
+        << "WIDTH and HEIGHT must be less than or equal to original" << endl;
+        return 2; // returning 2 means there was an error in the program
         }
     // create the seam_carved image
     carved_Img = seam_carve_width(img, width);
@@ -65,13 +65,13 @@ int main(int argc, char* argv[]) {
     }
 
     // printing to output_file the new seam_carved image
-    ofstream ifs_output (output_file);
-    if(!ifs_output.is_open()) { // if the output file could not be opened, print an error message
+    ofstream ofs_output (output_file);
+    if(!ofs_output.is_open()) { // if the output file could not be opened, print an error message
         cout << "Error opening file: " << output_file << endl;
         return 2; // returning 2 means there was an error in the program
     }
 
-    carved_Img.print(ifs_output);
+    carved_Img.print(ofs_output);
     // returning a non-zero value
     return 1; // returning 1 means the program worked successfully
     
