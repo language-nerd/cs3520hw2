@@ -81,6 +81,7 @@ Pixel Image::get_pixel(int row, int column) const {
 
 void Image::set_pixel(int row, int column, const Pixel& color) {
     assert(row >= 0 && row < m_height && column >= 0 && column < m_width);
+    assert(color.r >= 0 && color.r <= 255 && color.g >= 0 && color.g <= 255 && color.b >= 0 && color.b <= 255);
     m_red_channel.at(row, column) = color.r;
     m_green_channel.at(row, column) = color.g;
     m_blue_channel.at(row, column) = color.b;

@@ -81,8 +81,12 @@ TEST(text_Matrix_fill_different_nums) {
 
 }
 
+// Fills a 5x3 matrix and tests the
+// get_row_slice method by checking
+// that it returned the appropriate
+// slice based on the given inputs
 TEST(test_Matrix_row_slice_norm) {
-    int width = 5;
+  int width = 5;
   int height = 3;
   auto mat = Matrix(width, height);
   mat.at(0, 0) = 1;
@@ -107,6 +111,9 @@ TEST(test_Matrix_row_slice_norm) {
   ASSERT_EQUAL(portion.size(), 2);
 }
 
+// Fills a 5x3 matrix and tests 
+// the get_row_slice method's behavior
+// when the col_start parameter is less than zero
 TEST(test_Matrix_row_slice_col_start_less_than_zero) {
   int width = 5;
   int height = 3;
@@ -134,6 +141,10 @@ TEST(test_Matrix_row_slice_col_start_less_than_zero) {
   ASSERT_EQUAL(portion.size(), 3);
 }
 
+// Fills a 5x3 matrix and tests the behavior
+// of the get_row_slice method when the
+// col_end paramter is greater than the
+// width of the matrix
 TEST(test_Matrix_row_slice_col_end_greater_than_width) {
   int width = 5;
   int height = 3;
@@ -163,6 +174,7 @@ TEST(test_Matrix_row_slice_col_end_greater_than_width) {
   ASSERT_EQUAL(portion.size(), 5);
 }
 
+// Tests printing a 3x2 matrix 
 TEST(test_Matrix_print) {
   int width = 3;
   int height = 2;
