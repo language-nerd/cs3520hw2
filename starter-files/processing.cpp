@@ -14,10 +14,10 @@ Image rotate_left(const Image& img) {
   for (int i = 0; i < img.get_width(); ++i){
     for (int j = 0; j < img.get_height(); ++j){
       Pixel scraped_pixel = img.get_pixel(i, j);
-      rotated_image.set_pixel(j, img.get_width()-1-i, scraped_pixel);
+      rotated_image.set_pixel(img.get_height()-1-j, i, scraped_pixel);
     }
   }
-
+  
   return rotated_image;
 }
 Image rotate_right(const Image& img) {
@@ -28,10 +28,10 @@ Image rotate_right(const Image& img) {
   for (int i = 0; i < img.get_width(); ++i){
     for (int j = 0; j < img.get_height(); ++j){
       Pixel scraped_pixel = img.get_pixel(i, j);
-      rotated_image.set_pixel(img.get_height()-1-j, i, scraped_pixel);
+      rotated_image.set_pixel(j, img.get_width()-1-i, scraped_pixel);
     }
   }
-  
+
   return rotated_image;
 }
 Matrix compute_energy_matrix(const Image& img) {
@@ -98,7 +98,7 @@ std::vector<int> find_minimal_vertical_seam(const Matrix& cost) {
   }
 
   for (int j = cost.get_width()-1; j >= 0; --j){
-    if(j = cost.get_width()-1){ // if bottom row
+    if(j == (cost.get_width()-1)){ // if bottom row
       seam.at(cost.get_height()-1) = minimum_cost_pixel; // set the seam value to the current minimum cost pixel
     }
     else { // if any row above the bottom row, check itself and neighbors for lowest
@@ -144,6 +144,7 @@ Image remove_vertical_seam(const Image& img, const std::vector<int>& seam) {
       }
     }
   }
+  return trimmed_image;
 }
 
 Image seam_carve_width(const Image& img, int new_width) {
